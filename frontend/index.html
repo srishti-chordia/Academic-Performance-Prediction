@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Performance Predictor</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+
+<body>
+    <div class="container">
+        <h1>Predict Exam Score</h1>
+        <form id="predictForm">
+            <label>Hours Studied: <input type="number" name="Hours_Studied" required></label>
+            <label>Attendance (%): <input type="number" name="Attendance" required></label>
+            <label>Parental Involvement:
+                <select name="Parental_Involvement">
+                    <option>Low</option>
+                    <option>Medium</option>
+                    <option>High</option>
+                </select>
+            </label>
+            <label>Access to Resources:
+                <select name="Access_to_Resources">
+                    <option>Low</option>
+                    <option>Medium</option>
+                    <option>High</option>
+                </select>
+            </label>
+            <label>Extracurricular Activities:
+                <select name="Extracurricular_Activities">
+                    <option>Yes</option>
+                    <option>No</option>
+                </select>
+            </label>
+            <label>Sleep Hours: <input type="number" name="Sleep_Hours" required></label>
+            <label>Previous Scores: <input type="number" name="Previous_Scores" required></label>
+            <label>Motivation Level:
+                <select name="Motivation_Level">
+                    <option>Low</option>
+                    <option>Medium</option>
+                    <option>High</option>
+                </select>
+            </label>
+            <label>Internet Access:
+                <select name="Internet_Access">
+                    <option>Yes</option>
+                    <option>No</option>
+                </select>
+            </label>
+            <label>Tutoring Sessions: <input type="number" name="Tutoring_Sessions" required></label>
+            <label>Family Income:
+                <select name="Family_Income">
+                    <option>Low</option>
+                    <option>Medium</option>
+                    <option>High</option>
+                </select>
+            </label>
+            <label>Teacher Quality:
+                <select name="Teacher_Quality">
+                    <option>Low</option>
+                    <option>Medium</option>
+                    <option>High</option>
+                </select>
+            </label>
+            <label>School Type:
+                <select name="School_Type">
+                    <option>Public</option>
+                    <option>Private</option>
+                </select>
+            </label>
+            <label>Peer Influence:
+                <select name="Peer_Influence">
+                    <option>Negative</option>
+                    <option>Neutral</option>
+                    <option>Positive</option>
+                </select>
+            </label>
+            <label>Physical Activity (hrs): <input type="number" name="Physical_Activity" required></label>
+            <label>Learning Disabilities:
+                <select name="Learning_Disabilities">
+                    <option>Yes</option>
+                    <option>No</option>
+                </select>
+            </label>
+            <label>Parental Education Level:
+                <select name="Parental_Education_Level">
+                    <option>High School</option>
+                    <option>College</option>
+                    <option>Postgraduate</option>
+                </select>
+            </label>
+            <label>Distance from Home:
+                <select name="Distance_from_Home">
+                    <option>Near</option>
+                    <option>Moderate</option>
+                    <option>Far</option>
+                </select>
+            </label>
+            <label>Gender:
+                <select name="Gender">
+                    <option>Male</option>
+                    <option>Female</option>
+                </select>
+            </label>
+            <button type="submit">Predict Score</button>
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('predictForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+
+            const response = await fetch('http://localhost:8000/predict', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+            document.getElementById('result').innerText = 'Predicted Exam Score: ' + result.predicted_score.toFixed(2);
+        });
+    </script>
+</body>
+
+</html>
