@@ -1,12 +1,15 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import joblib
 import numpy as np
 import os
 
-# Set base path
+# Paths
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+FRONTEND_DIR = os.path.abspath(os.path.join(BASE_DIR, "../frontend"))
 
 # Load model and preprocessing tools
 model = joblib.load(os.path.join(BASE_DIR, "linear_regression_model.pkl"))
@@ -16,19 +19,23 @@ label_encoders = joblib.load(os.path.join(BASE_DIR, "label_encoders.pkl"))
 # Initialize FastAPI app
 app = FastAPI()
 
-# Enable CORS (important for frontend interaction)
+# Enable CORS for frontend interaction
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # You can replace "*" with your frontend domain
+    allow_origins=["*"],  # Replace "*" with your frontend URL in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Root route to confirm API is running
-@app.get("/")
-def read_root():
-    return {"message": "Student Performance Prediction API is live!"}
+# Serve static files (like style.css) from the frontend directory
+app.mount("/static", StaticFiles(directory=FRONTEND_DIR), name="static")
+
+# Root route to serve index.html
+@app.get("/", response_class=HTMLResponse)
+def serve_homepage():
+    index_path = os.path.join(FRONTEND_DIR, "index.html")
+    return FileResponse(index_path)
 
 # Input schema for prediction
 class StudentData(BaseModel):
