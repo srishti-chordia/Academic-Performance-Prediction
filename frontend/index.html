@@ -110,21 +110,31 @@
     </div>
 
     <script>
-        document.getElementById('predictForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-            const data = Object.fromEntries(formData.entries());
+    document.getElementById('predictForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData.entries());
 
-            const response = await fetch('http://localhost:8000/predict', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-
-            const result = await response.json();
-            document.getElementById('result').innerText = 'Predicted Exam Score: ' + result.predicted_score.toFixed(2);
+        // Convert numeric fields to float
+        const floatFields = [
+            "Hours_Studied", "Attendance", "Sleep_Hours", "Previous_Scores",
+            "Tutoring_Sessions", "Physical_Activity"
+        ];
+        floatFields.forEach(field => {
+            data[field] = parseFloat(data[field]);
         });
-    </script>
+
+        const response = await fetch('https://academic-performance-prediction.onrender.com/predict', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        document.getElementById('result').innerText = 'Predicted Exam Score: ' + result.predicted_score.toFixed(2);
+    });
+</script>
+
 </body>
 
 </html>
