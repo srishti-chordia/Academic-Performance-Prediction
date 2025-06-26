@@ -2,11 +2,6 @@
 
 This project is a web application that predicts a student's exam score based on multiple academic, behavioral, and socio-economic factors. It uses a trained Machine Learning model deployed via a FastAPI backend and a simple HTML/CSS/JS frontend interface.
 
-### 🚀 Live Demo  
-👉 **[Try it here](https://academic-performance-prediction.onrender.com)**  
-👉 **Frontend**: Open `index.html` in your browser or deploy it using a static host like GitHub Pages, Netlify, or Render.
-
----
 
 ## 📌 Features
 
